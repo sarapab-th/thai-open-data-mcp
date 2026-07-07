@@ -1,0 +1,14 @@
+{
+  "name": "thai-open-data-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for Thailand's official open-government data (data.go.th) — search and read national datasets from any AI assistant. Free, no API key.",
+  "license": "MIT",
+  "author": "Nemanja Djordjevic",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
