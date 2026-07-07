@@ -3,3 +3,8 @@ main = "src/index.ts"
 compatibility_date = "2026-06-01"
 
 workers_dev = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "thai-open-data"
+database_id = "9dfe2cc8-1a73-41ba-b331-f10150859aeb"

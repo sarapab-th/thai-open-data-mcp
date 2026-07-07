@@ -4,7 +4,7 @@
 import { handleBody, DISCOVERY, CORS, err } from './core';
 
 export default {
-  async fetch(request: Request): Promise<Response> {
+  async fetch(request: Request, env: { DB?: any }): Promise<Response> {
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS });
     if (request.method === 'GET')
       return new Response(JSON.stringify(DISCOVERY), { status: 200, headers: { 'content-type': 'application/json', ...CORS } });
@@ -20,7 +20,7 @@ export default {
       });
     }
 
-    const { status, payload } = await handleBody(body);
+    const { status, payload } = await handleBody(body, env?.DB ?? null);
     if (!payload) return new Response(null, { status, headers: CORS });
     return new Response(JSON.stringify(payload), { status, headers: { 'content-type': 'application/json', ...CORS } });
   },
