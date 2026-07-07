@@ -1,0 +1,16 @@
+# Measurement: which cloud egress can reach Thailand's open-data hosts.
+# GitHub-hosted runners run on Microsoft Azure — this is the Azure datapoint.
+name: probe-thai-gov-hosts
+on: workflow_dispatch
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: probe
+        run: |
+          for u in "https://data.go.th/api/3/action/package_search?q=test&rows=1" \
+                   "https://gdcatalog.go.th/api/3/action/package_search?q=test&rows=1" \
+                   "https://opend.data.go.th/get-ckan/datastore_search?limit=1"; do
+            code=$(curl -sk -o /dev/null -w "%{http_code}" --max-time 20 "$u" -H "user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36")
+            echo "AZURE_PROBE $code $u"
+          done
