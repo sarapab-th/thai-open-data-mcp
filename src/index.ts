@@ -1,27 +1,27 @@
-// Cloudflare Worker entry — kept for self-hosters. NOTE: data.go.th's WAF
-// currently 403s Cloudflare egress IPs, so the primary hosted endpoint runs on
-// Vercel (api/mcp.ts). This entry works from hosts data.go.th doesn't block.
-import { handleBody, DISCOVERY, CORS, err } from './core';
+// PAUSED 2026-07-09 by Greenstead Co Ltd, pending direct outreach to DGA
+// (Digital Government Development Agency) before this stays live long-term.
+// This is a deliberate, reversible pause — not a shutdown. Original live code
+// backed up; D1 mirror and GitHub repo are untouched. Restore by reverting
+// this file once resolved.
+
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Mcp-Session-Id, MCP-Protocol-Version',
+};
 
 export default {
-  async fetch(request: Request, env: { DB?: any }): Promise<Response> {
+  async fetch(request: Request): Promise<Response> {
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS });
-    if (request.method === 'GET')
-      return new Response(JSON.stringify(DISCOVERY), { status: 200, headers: { 'content-type': 'application/json', ...CORS } });
-    if (request.method !== 'POST') return new Response('Method not allowed', { status: 405, headers: CORS });
-
-    let body;
-    try {
-      body = await request.json();
-    } catch {
-      return new Response(JSON.stringify(err(null, -32700, 'Parse error')), {
-        status: 400,
-        headers: { 'content-type': 'application/json', ...CORS },
-      });
-    }
-
-    const { status, payload } = await handleBody(body, env?.DB ?? null);
-    if (!payload) return new Response(null, { status, headers: CORS });
-    return new Response(JSON.stringify(payload), { status, headers: { 'content-type': 'application/json', ...CORS } });
+    return new Response(
+      JSON.stringify({
+        name: 'Thai Open Data MCP',
+        status: 'paused',
+        message:
+          "This server is temporarily paused while we reach out to Thailand's Digital Government Development Agency (DGA) directly, out of respect, before continuing to serve a mirror of their catalog. It will return once that conversation has happened. Source is public and unchanged: https://github.com/sarapab-th/thai-open-data-mcp",
+        contact: 'goyasapiens@gmail.com',
+      }, null, 2),
+      { status: 503, headers: { 'content-type': 'application/json', ...CORS } }
+    );
   },
 };

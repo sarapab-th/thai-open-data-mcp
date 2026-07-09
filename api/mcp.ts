@@ -1,44 +1,18 @@
-// Vercel Node serverless entry (AWS egress — data.go.th's WAF blocks
-// Cloudflare's IP ranges, so the hosted endpoint lives here; src/index.ts
-// keeps the Cloudflare Worker for self-hosters whose egress isn't blocked).
-import { handleBody, DISCOVERY, CORS, err } from '../src/core';
+// PAUSED 2026-07-09 by Greenstead Co Ltd, pending direct outreach to DGA
+// (Digital Government Development Agency) before this stays live long-term.
+// This is a deliberate, reversible pause — not a shutdown. Original live code
+// backed up; D1 mirror and GitHub repo are untouched. Restore by reverting
+// this file once resolved.
 
 export default async function handler(req: any, res: any) {
-  for (const [k, v] of Object.entries(CORS)) res.setHeader(k, v as string);
-
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   if (req.method === 'OPTIONS') return res.status(204).end();
-  if (req.method === 'GET') {
-    // temp diagnostic: /?probe=1 fetches candidate upstream hosts, reports status
-    if (req.query?.probe) {
-      const targets = [
-        'https://data.go.th/api/3/action/package_search?q=test&rows=1',
-        'https://gdcatalog.go.th/api/3/action/package_search?q=test&rows=1',
-        'https://opend.data.go.th/get-ckan/datastore_search?limit=1',
-      ];
-      const out: Record<string, string> = {};
-      for (const t of targets) {
-        try {
-          const r = await fetch(t, { headers: { 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' } });
-          out[t] = String(r.status);
-        } catch (e: any) { out[t] = `ERR ${e?.message ?? e}`; }
-      }
-      return res.status(200).json(out);
-    }
-    return res.status(200).json(DISCOVERY);
-  }
-  if (req.method !== 'POST') return res.status(405).send('Method not allowed');
-
-  let body = req.body;
-  if (typeof body === 'string') {
-    try {
-      body = JSON.parse(body);
-    } catch {
-      return res.status(400).json(err(null, -32700, 'Parse error'));
-    }
-  }
-  if (!body || typeof body !== 'object') return res.status(400).json(err(null, -32700, 'Parse error'));
-
-  const { status, payload } = await handleBody(body);
-  if (!payload) return res.status(status).end();
-  return res.status(status).json(payload);
+  return res.status(503).json({
+    name: 'Thai Open Data MCP',
+    status: 'paused',
+    message:
+      "This server is temporarily paused while we reach out to Thailand's Digital Government Development Agency (DGA) directly, out of respect, before continuing to serve a mirror of their catalog. It will return once that conversation has happened. Source is public and unchanged: https://github.com/sarapab-th/thai-open-data-mcp",
+    contact: 'goyasapiens@gmail.com',
+  });
 }

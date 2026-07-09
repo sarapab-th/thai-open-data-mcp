@@ -1,0 +1,17 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.sarapab-th/thai-open-data-mcp",
+  "title": "Thai Open Data MCP",
+  "description": "AI-readable access to Thailand's national open-data catalog (data.go.th) — 41,000+ official government datasets, searchable in Thai or English. Free, no API key.",
+  "version": "0.2.0",
+  "repository": {
+    "url": "https://github.com/sarapab-th/thai-open-data-mcp",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://thai-open-data-mcp.confessionsplatform.workers.dev"
+    }
+  ]
+}
