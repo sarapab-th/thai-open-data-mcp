@@ -1,9 +1,9 @@
 {
   "name": "thai-open-data-mcp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "MCP server for Thailand's official open-government data (data.go.th) — search and read national datasets from any AI assistant. Free, no API key.",
   "license": "MIT",
-  "author": "Nemanja Djordjevic",
+  "author": "Greenstead Co Ltd (https://greenstead-th.com)",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy"

@@ -109,12 +109,14 @@ async function mirrorSearch(db: any, query: string, limit: number) {
   const binds: string[] = [];
   for (const t of tokens) binds.push(t, t, t, t);
 
+  // COUNT(*) OVER () = true matching total (window fn runs after WHERE, before
+  // LIMIT) — results.length here would report the capped page size as the total.
   const { results } = await db
-    .prepare(`SELECT * FROM (SELECT id,title,summary,org,tags,formats,license,updated,url,(${score}) AS s FROM datasets) WHERE s > 0 ORDER BY s DESC, updated DESC LIMIT ?`)
+    .prepare(`SELECT *, COUNT(*) OVER () AS total FROM (SELECT id,title,summary,org,tags,formats,license,updated,url,(${score}) AS s FROM datasets) WHERE s > 0 ORDER BY s DESC, updated DESC LIMIT ?`)
     .bind(...binds, Math.min(Math.max(limit || 5, 1), 20))
     .all();
   return {
-    total_matching: results.length,
+    total_matching: results[0]?.total ?? 0,
     results: results.map((r: any) => ({
       id: r.id, title: r.title, summary: r.summary || undefined, organization: r.org || null,
       tags: parseJ(r.tags), formats: parseJ(r.formats), license: r.license, last_updated: r.updated || null, url: r.url,
