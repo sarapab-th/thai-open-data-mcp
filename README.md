@@ -4,6 +4,8 @@
 
 Free. No API key. Remote — nothing to install.
 
+> **⏸️ Status (July 2026):** the hosted endpoint is temporarily paused while we reach out to the Digital Government Development Agency (DGA) directly, out of respect, before continuing to serve a mirror of their catalog. The code, the mirror architecture and self-hosting are unaffected. Contact: goyasapiens@gmail.com
+
 ## Try it
 
 Hosted streamable-HTTP endpoint:
